@@ -4,9 +4,14 @@ import streamlit as st
 st.title('MY DS Cheatsheet')
 
 
-topic = st.sidebar.radio("Topics", ('Heroku Commands', 'Conda Virtualenv',))
+topic = st.sidebar.radio("Topics", ('Data Visualization', 'KMeans', 'Heroku Commands', 'Conda Virtualenv',))
 
-if topic == 'Heroku Commands':
+if topic == 'Data Visualization':
+    st.markdown('<hr>', unsafe_allow_html=True)
+elif topic == 'KMeans':
+    st.markdown('<hr>', unsafe_allow_html=True)
+    
+elif topic == 'Heroku Commands':
     st.markdown('<hr>', unsafe_allow_html=True)
     st.text('Make sure you are inside the repository')
     st.markdown('<table style="font-size:11px">'\
