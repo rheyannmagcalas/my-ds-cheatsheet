@@ -1,0 +1,67 @@
+import pandas as pd
+import streamlit as st
+
+st.title('MY DS Cheatsheet')
+
+
+topic = st.sidebar.radio("Topics", ('Heroku Commands', 'Conda Virtualenv',))
+
+if topic == 'Heroku Commands':
+    st.markdown('<hr>', unsafe_allow_html=True)
+    st.text('Make sure you are inside the repository')
+    st.markdown('<table style="font-size:11px">'\
+                '<thead><tr><th>Usage</th><th>Command</th></tr></thead>'\
+                '<tbody><td>Login</td><td>heroku login -i</td></tbody>'\
+                '<tbody><td>Create Instance</td><td>heroku create</td></tbody>'\
+                '<tbody><td>Install your Code</td><td>git push heroku your_branch_name</td></tbody>'\
+                '<tbody><td>Install your Code</td><td>git push heroku your_branch_name</td></tbody>'\
+                '<tbody><td>Scaling your app to one dyno</td><td>heroku ps:scale web=1</td></tbody>'\
+                '<tbody><td>Checking logs</td><td>heroku logs --tail</td></tbody>'\
+                '<tbody><td>Rename Applications</td><td>heroku apps:rename newname --app oldname</td></tbody>'\
+                '</table>', unsafe_allow_html=True)
+
+    
+elif topic == 'Conda Virtualenv':
+    st.markdown('<hr>', unsafe_allow_html=True)
+    st.subheader('What is virtualenv?')
+    st.write('Virtualenv is a tool to create isolated Python environments. ')
+    
+    st.subheader('Steps to Create and Use Virtualenv:')
+    st.markdown('<b>1. Create Environment:</b> <br> conda create -n <env_name> python=<python_version>', unsafe_allow_html=True)
+    st.markdown('<b>2. Check if Environment is Created:</b> <br> conda info --envs', unsafe_allow_html=True)
+    st.markdown('<b>3. Activate Environment:</b> <br>  conda activate <env_name>', unsafe_allow_html=True)
+    st.markdown('<b>4. Open Jupyter Notebook</b> <br>', unsafe_allow_html=True)
+    
+    st.markdown('<hr>', unsafe_allow_html=True)
+    st.markdown('<b>Save Installed Libraries:</b> pip freeze >> requirements.txt', unsafe_allow_html=True)
+    st.markdown('<b>Install Multiple Libraries:</b> pip install -r requirements.txt', unsafe_allow_html=True)
+    
+    st.markdown('<hr>', unsafe_allow_html=True)
+    st.markdown('<b>Stop Enviroment:</b>&nbsp;&nbsp;&nbsp;&nbsp;conda deactivate', unsafe_allow_html=True)
+    st.markdown('<b>Delete Enviroment:</b>&nbsp;conda remove -n <env_name> --all', unsafe_allow_html=True)
+    
+        
+        
+
+# import streamlit as st
+
+# def get_user_name():
+#     return 'John'
+
+# with st.echo():
+#     # Everything inside this block will be both printed to the screen
+#     # and executed.
+
+#     def get_punctuation():
+#         return '!!!'
+
+#     greeting = "Hi there, "
+#     value = get_user_name()
+#     punctuation = get_punctuation()
+
+    #st.write(greeting, value, punctuation)
+
+# And now we're back to _not_ printing to the screen
+# foo = 'bar'
+# st.write('Done!')
+
