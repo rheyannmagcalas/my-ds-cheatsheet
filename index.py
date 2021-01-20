@@ -4,10 +4,21 @@ import streamlit as st
 st.title('MY DS Cheatsheet')
 
 
-topic = st.sidebar.radio("Topics", ('Data Visualization', 'KMeans', 'Heroku Commands', 'Conda Virtualenv',))
+topic = st.sidebar.radio("Topics", ('Data Visualization', 'Git', 'KMeans', 'Heroku Commands', 'Conda Virtualenv',))
 
 if topic == 'Data Visualization':
     st.markdown('<hr>', unsafe_allow_html=True)
+elif topic == 'Git':
+    st.markdown('<hr>', unsafe_allow_html=True)
+    st.markdown('<table style="font-size:11px">'\
+                '<thead><tr><th>Command</th><th>Command</th></tr></thead>'\
+                '<tbody><td>git status</td><td>Displays the state of the working directory</td></tbody>'\
+                '<tbody><td>git add</td><td>Adds a change in the working directory to the staging area.</td></tbody>'\
+                '<tbody><td>git commit -m your_message</td><td>Saving Changes to local repository</td></tbody>'\
+                '<tbody><td>git push origin your_branch</td><td>Command used to upload local repository to a remote repository</td></tbody>'\
+                '<tbody><td>git pull origin your_branch</td><td>Command used to fetch and download content from a remote repository.</td></tbody>'\
+                '<tbody><td>git stash</td><td>Command to go back to a clean working directory.</td></tbody>'\
+                '</table>', unsafe_allow_html=True)
 elif topic == 'KMeans':
     st.markdown('<hr>', unsafe_allow_html=True)
     
