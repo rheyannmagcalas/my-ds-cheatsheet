@@ -7,7 +7,7 @@ import seaborn as sns
 import streamlit as st
 
 
-st.beta_set_page_config(
+st.set_page_config(
     page_title="My DS Cheatsheet",
     layout="wide",
     initial_sidebar_state="expanded",
