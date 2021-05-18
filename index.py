@@ -19,12 +19,69 @@ topic = st.sidebar.radio("Topics", ('Data Wrangling', 'Data Visualization', 'Fea
 if topic == 'Data Wrangling':
     st.markdown('<hr>', unsafe_allow_html=True)
     data_wrangling_option = st.selectbox(
-        'Chart',  ('Reading', 'Conditions', 'Line'))
+        'Chart',  ('Reading', 'Aggregation', 'Conditions'))
     
     if data_wrangling_option == 'Reading':
-        st.write('here2')
-    elif data_wrangling_option == 'Conditions':
-        st.write('here')
+        with st.echo():
+            import pandas as pd
+            import numpy as np
+            import matplotlib.pyplot as plt
+            
+            #df = pd.read_csv("schools.csv")
+            
+            #df.shape
+            
+            #df.head()
+            
+            #df.tail()
+            
+            #Check additional info
+#             df.info()
+            
+#             # Check column names
+#             df.columns
+            
+#             ## Check missing values
+#             df.isna().sum()
+            
+#             ## Check for duplicates
+#             df["ID"].nunique()
+            
+            
+            
+    elif data_wrangling_option == 'Aggregation':
+        
+        with st.echo():
+            import numpy as np
+            import pandas as pd
+            
+            df = pd.DataFrame({
+                "A": [1, 1, 2, 2],
+                "B": [1, 2, 3, 4],
+                "C": [0.362838, 0.227877, 1.267767, -0.562860]})
+            
+            df.groupby('A').agg({'B': ['min', 'max', np.mean], 'C': 'sum'})
+        
+        
+        
+
+    elif data_wrangling_option == 'Conditions':        
+        new_column_conditions = st.beta_expander('Creating New Column From Conditions')
+        with new_column_conditions:        
+            st.write('Option 1:')
+            with st.echo():
+                numbers = {'set_of_numbers': [1,2,3,4,5,6,7,8,9,10]}
+                df = pd.DataFrame(numbers,columns=['set_of_numbers'])
+
+                df.loc[df['set_of_numbers'] <= 4, 'equal_or_lower_than_4?'] = 'True' 
+                df.loc[df['set_of_numbers'] > 4, 'equal_or_lower_than_4?'] = 'False' 
+
+            st.write('Option 2:')
+            with st.echo():
+                numbers = {'set_of_numbers': [1,2,3,4,5,6,7,8,9,10]}
+                df = pd.DataFrame(numbers,columns=['set_of_numbers'])
+
+                df['equal_or_lower_than_4?'] = df['set_of_numbers'].apply(lambda x: 'True' if x <= 4 else 'False')
         
     
 elif topic == 'Feature Engineering':
