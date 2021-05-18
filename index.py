@@ -1,10 +1,10 @@
+import folium
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 import seaborn as sns
 import streamlit as st
+from streamlit_folium import folium_static
 
 
 st.set_page_config(
@@ -14,18 +14,32 @@ st.set_page_config(
 )
 
 
-topic = st.sidebar.radio("Topics", ('Data Visualization', 'Git', 'KMeans', 'Heroku Commands'))
+topic = st.sidebar.radio("Topics", ('Data Wrangling', 'Data Visualization', 'Feature Engineering', 'Git', 'Unsupervised Learning', 'Heroku Commands'))
 
-
-
-if topic == 'Data Visualization':
+if topic == 'Data Wrangling':
+    st.markdown('<hr>', unsafe_allow_html=True)
+    data_wrangling_option = st.selectbox(
+        'Chart',  ('Reading', 'Conditions', 'Line'))
+    
+    if data_wrangling_option == 'Reading':
+        st.write('here2')
+    elif data_wrangling_option == 'Conditions':
+        st.write('here')
+        
+    
+elif topic == 'Feature Engineering':
+    st.markdown('<hr>', unsafe_allow_html=True)
+    
+    
+elif topic == 'Data Visualization':
     st.markdown('<hr>', unsafe_allow_html=True)
 
     data_visualization_option = st.selectbox(
-        'Chart',  ('Column', 'Bar', 'Line'))
+        'Chart',  ('Column', 'Bar', 'Line', 'Scatterplot', 'Bubble', 'Histogram', 'Boxplot', 'Map'))
 
     if data_visualization_option == 'Column':
-        st.markdown('A column chart is used to show a <b>COMPARISON</b> among different items, or it can show a comparison of items over time.', unsafe_allow_html=True)
+        st.markdown('A column chart is used to show a <b>COMPARISON</b> among different items, or it can show a comparison \
+        of items over time.', unsafe_allow_html=True)
         st.markdown('<b>Design Best Practices:</b>', unsafe_allow_html=True)
         st.markdown('<ul>\
             <li>Use consistent colors throughout the chart, selecting accent colors to highlight meaningful data points or changes over time.</li>\
@@ -33,47 +47,63 @@ if topic == 'Data Visualization':
             <li>Start the y-axis at 0 to appropriately reflect the values in your graph.</li></ul>', unsafe_allow_html=True)
         
         st.markdown('<b>Example:</b>', unsafe_allow_html=True)
+        sns.set(style="whitegrid")
         tips = sns.load_dataset("tips")
 
         col1, col2 = st.beta_columns(2)
 
-        fig = plt.figure(figsize=(5,3.75))
-        ax = sns.barplot(x="day", y="total_bill", data=tips, ci = None)
-        ax.set_title('Sample Column Seaborn Chart')
-        ax.set(xlabel='Total Bill', ylabel='Day')
-        col1.pyplot(fig)
-
-        data_canada = px.data.gapminder().query("country == 'Canada'")
-        fig = px.bar(data_canada, x='year', y='pop',  
-                    labels={
-                            "year": "Year",
-                            "pop": "Population"
-                        },
-                    title="Sample Column Plotly Chart")
-        col2.plotly_chart(fig, use_container_width=True)
-
+        fig_1 = plt.figure(figsize=(5,3.75))
+        ax1 = sns.barplot(x="day", y="total_bill", data=tips, ci = None, color='#5499c7')
+        ax1.set_title('Total Bills per Day')
+        ax1.set(xlabel='Day', ylabel='Total Bills')        
+        col1.pyplot(fig_1)
+        
         st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
         with st.echo():
             import matplotlib.pyplot as plt
             import seaborn as sns
+            sns.set(style="whitegrid")
             tips = sns.load_dataset("tips")
 
-            fig = plt.figure(figsize=(15,8))
-            ax = sns.barplot(x="day", y="total_bill", data=tips, ci = None)
-            ax.set_title('Total Bill Per Day')
-            ax.set(xlabel='Total Bill', ylabel='Day')
-            # plot.show()
-
-        st.markdown('<b>Plotly Code:</b>', unsafe_allow_html=True)
+            fig = plt.figure(figsize=(5,3.75))
+            ax1 = sns.barplot(x="day", y="total_bill", data=tips, ci = None, color='#5499c7')
+            ax1.set_title('Total Bills per Day')
+            ax1.set(xlabel='Day', ylabel='Total Bills')        
+            plt.show()
+        
+        
+        df = pd.DataFrame({'names': ['Mon', 'Tue', 'Wed', 'Thurs'], 
+                           'h2': [100, 90, 80, 70]})
+        
+        colors = df['names'].apply(lambda x: 'red' if x =='Mon' else '#bfc9ca')
+        
+        fig_2 = plt.figure(figsize=(5,3.75))
+        ax2 = sns.barplot(x='names', y='h2', palette=colors,  dodge=False, data=df)
+        ax2.set_xticklabels(labels=df['names'], rotation=90, fontsize=15)
+        ax2.set_title('Total Bills per Day')
+        ax2.set(xlabel='Day', ylabel='Total Bills')   
+        
+        col2.pyplot(fig_2)
+        
+        
         with st.echo():
-            data_canada = px.data.gapminder().query("country == 'Canada'")
-            fig = px.bar(data_canada, x='year', y='pop',  
-                        labels={
-                                "year": "Year",
-                                "pop": "Population"
-                            },
-                        title="Canada Population")
-            #fig.show()
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+            sns.set(style="whitegrid")            
+            df = pd.DataFrame({'names': ['Mon', 'Tue', 'Wed', 'Thurs'], 
+                           'h2': [100, 90, 80, 70]})
+            
+            colors = df['names'].apply(lambda x: 'red' if x =='Mon' else 'gray')
+
+            fig_2 = plt.figure(figsize=(5,3.75))
+            ax2 = sns.barplot(x='names', y='h2', palette=colors,  dodge=False, data=df)
+            ax2.set_xticklabels(labels=df['names'], rotation=90, fontsize=15)
+            ax2.set_title('Total Bills per Day')
+            ax2.set(xlabel='Day', ylabel='Total Bills') 
+            plt.show()
+        
+  
+
     elif data_visualization_option == 'Bar':
         st.markdown('A bar graph, basically a horizontal column chart, should be used to avoid clutter when one data label is long or if you have \
             <b>more than 10 items to compare</b>. This type of visualization can also be used to <b>display negative numbers.</b>', unsafe_allow_html=True)
@@ -88,26 +118,10 @@ if topic == 'Data Visualization':
 
         df = pd.DataFrame(np.random.randint(0,10,size=(10, 4)), columns=list('ABCD'))
         fig = plt.figure(figsize=(5,3.75))
-        ax = sns.barplot(data=df, orient = 'h', ci = None)
+        ax = sns.barplot(data=df, orient = 'h', ci = None, color='#5499c7')
         ax.set_title('Sample Bar Graph')
         ax.set(xlabel='X-Axis', ylabel='Y-Axis')
         col1.pyplot(fig)
-
-        fig = go.Figure(go.Bar(
-                    x=[20, 14, 23],
-                    y=['giraffes', 'orangutans', 'monkeys'],
-                    orientation='h',
-                    marker=dict(
-                        color='rgba(246, 78, 139, 0.6)',
-                        line=dict(color='rgba(246, 78, 139, 1.0)', width=3)
-                    ),
-                ), layout=go.Layout(
-                        title=go.layout.Title(text="Sample Bar Plotly Chart"),
-                        xaxis_title="X Axis Title",
-                        yaxis_title="Y Axis Title",
-                    ))
-
-        col2.plotly_chart(fig, use_container_width=True)
 
         st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
         with st.echo():
@@ -118,26 +132,10 @@ if topic == 'Data Visualization':
 
             df = pd.DataFrame(np.random.randint(0,10,size=(10, 4)), columns=list('ABCD'))
             plt.figure(figsize=(15,8))
-            ax = sns.barplot(data=df, orient = 'h', ci = None)
+            ax = sns.barplot(data=df, orient = 'h', ci = None, color='#5499c7')
             ax.set_title('Sample Bar Graph')
             ax.set(xlabel='X-Axis', ylabel='Y-Axis')
             plt.show()
-
-        st.markdown('<b>Plotly Code:</b>', unsafe_allow_html=True)
-        with st.echo():
-            fig = go.Figure(go.Bar(
-                    x=[20, 14, 23],
-                    y=['giraffes', 'orangutans', 'monkeys'],
-                    orientation='h',
-                    marker=dict(
-                        color='rgba(246, 78, 139, 0.6)',
-                        line=dict(color='rgba(246, 78, 139, 1.0)', width=3)
-                    ),
-                ), layout=go.Layout(
-                        title=go.layout.Title(text="Sample Bar Plotly Chart"),
-                        xaxis_title="X Axis Title",
-                        yaxis_title="Y Axis Title",
-                    ))
 
     elif data_visualization_option == 'Line':
         st.markdown('A line graph reveals <b>trends or progress over time</b> and can be used to show many different categories of data. \
@@ -159,19 +157,153 @@ if topic == 'Data Visualization':
         st.pyplot(fig)
 
         st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
+        
+    elif data_visualization_option == 'Scatterplot':
+        st.markdown('A scatterplot is a type of data display that shows the relationship between two numerical variables', unsafe_allow_html=True)
+        
+        sns.set(style="whitegrid")
+        tips = sns.load_dataset("tips")
+
+        col1, col2 = st.beta_columns(2)
+
+        fig_1 = plt.figure(figsize=(5,3.75))
+        ax1 = sns.scatterplot(data=tips, x="total_bill", y="tip")
+        ax1.set_title('Total Bills per Day')
+        ax1.set(xlabel='Day', ylabel='Total Bills')        
+        col1.pyplot(fig_1)
+        
+        st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
         with st.echo():
-            import seaborn as sns 
-            import matplotlib.pyplot as plt 
-            
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+            sns.set(style="whitegrid")
+            tips = sns.load_dataset("tips")
 
-            plt.figure(figsize=(15,6))
-            data = sns.load_dataset("iris") 
+            fig_1 = plt.figure(figsize=(5,3.75))
+            ax1 = sns.scatterplot(data=tips, x="total_bill", y="tip")
+            ax1.set_title('Total Bills per Day')
+            ax1.set(xlabel='Day', ylabel='Total Bills')    
+            plt.show()
             
-            ax = sns.lineplot(x="sepal_length", y="sepal_width", data=data) 
-            ax.set_title('Sample Line Graph')
-            ax.set(xlabel='X-Axis', ylabel='Y-Axis')
-            #plt.show()
+    elif data_visualization_option == 'Bubble':
+        st.markdown('A bubble plot is basically a scatterplot with an additional dimension: size of points.', unsafe_allow_html=True)
+        
+        sns.set(style="whitegrid")
+        col1, col2 = st.beta_columns(2)
+        
+        from gapminder import gapminder
+        fig_1 = plt.figure(figsize=(5,3.75))
+        data = gapminder.loc[gapminder.year == 2007]
+        ax1 = sns.scatterplot(data=data, x="gdpPercap", y="lifeExp", size="pop", legend=False, sizes=(20, 2000))
+        ax1.set_title('Relationship between life expectancy (y) and gdp per capita (x)')
+        ax1.set(xlabel='GDP Per Capita', ylabel='Life Expectancy') 
+        col1.pyplot(fig_1)
+        
+        
+        with st.echo():
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+            from gapminder import gapminder 
 
+            fig_1 = plt.figure(figsize=(5,3.75))
+            data = gapminder.loc[gapminder.year == 2007]
+            ax1 = sns.scatterplot(data=data, x="gdpPercap", y="lifeExp", size="pop", legend=False, sizes=(20, 2000))
+            ax1.set_title('Relationship between life expectancy (y) and gdp per capita (x)')
+            ax1.set(xlabel='GDP Per Capita', ylabel='Life Expectancy') 
+            plt.show()
+            
+    elif data_visualization_option == 'Histogram':
+        st.markdown('A histogram is the most commonly used graph to show frequency distributions.', unsafe_allow_html=True)
+        
+        sns.set(style="whitegrid")
+        col1, col2 = st.beta_columns(2)
+        
+        penguins = sns.load_dataset("penguins")
+
+        fig_1 = plt.figure(figsize=(5,3.75))
+        ax1 = sns.histplot(data=penguins, x="flipper_length_mm")
+        ax1.set_title('Flipper_length_mm Distribution')
+        ax1.set(xlabel='flipper_length_mm', ylabel='Count') 
+        col1.pyplot(fig_1)
+        
+        
+        with st.echo():
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+
+            fig_1 = plt.figure(figsize=(5,3.75))
+            penguins = sns.load_dataset("penguins")
+            fig_1 = plt.figure(figsize=(5,3.75))
+            ax1 = sns.histplot(data=penguins, x="flipper_length_mm")
+            ax1.set_title('Flipper_length_mm Distribution')
+            ax1.set(xlabel='flipper_length_mm', ylabel='Count') 
+            plt.show()
+            
+    elif data_visualization_option == 'Boxplot':
+        st.markdown('A boxplot is a standardized way of displaying the distribution of data based on a five number summary (“minimum”, first quartile (Q1), median, third quartile (Q3), and “maximum”). It can tell you about your outliers and what their values are.', unsafe_allow_html=True)
+        
+        col1, col2 = st.beta_columns(2)
+        
+        tips = sns.load_dataset("tips")
+
+        fig_1 = plt.figure(figsize=(5,3.75))
+        ax1 = sns.boxplot(x="day", y="total_bill", data=tips)
+        ax1.set_title('Total Bills Per Day')
+        ax1.set(xlabel='day', ylabel='Total Bill') 
+        col1.pyplot(fig_1)
+        
+        with st.echo():
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+
+            fig_1 = plt.figure(figsize=(5,3.75))
+            ax1 = sns.boxplot(x="day", y="total_bill", data=tips)
+            ax1.set_title('Total Bills Per Day')
+            ax1.set(xlabel='day', ylabel='Total Bill') 
+            plt.show()
+            
+            
+    elif data_visualization_option == 'Map':
+        import folium
+        from streamlit_folium import folium_static
+        
+        
+        m = folium.Map(location = [7.6955724,122.0074178],
+                       zoom_start=6, 
+                       control_scale=True,
+                       prefer_canvas=True)
+        
+        folium.Marker(
+            [7.2359082, 124.2669569],
+            icon=folium.Icon(color='red',icon="hospital-o", prefix='fa'),
+            tooltip='COTABATO SANITARIUM'
+        ).add_to(m)
+        
+        folium.Marker(
+            [8.001110, 125.171670], popup="ACCUSAFE DIAGNOSTIC LABORATORY", tooltip='ACCUSAFE DIAGNOSTIC LABORATORY'
+        ).add_to(m)
+        
+        folium_static(m)
+        
+        
+        with st.echo():
+            m = folium.Map(location = [7.6955724,122.0074178],
+                       zoom_start=6, 
+                       control_scale=True,
+                       prefer_canvas=True)
+        
+            folium.Marker(
+                [7.2359082, 124.2669569],
+                icon=folium.Icon(color='red',icon="hospital-o", prefix='fa'),
+                tooltip='COTABATO SANITARIUM'
+            ).add_to(m)
+
+            folium.Marker(
+                [8.001110, 125.171670], popup="ACCUSAFE DIAGNOSTIC LABORATORY", tooltip='ACCUSAFE DIAGNOSTIC LABORATORY'
+            ).add_to(m)
+
+            m
+        
 
 elif topic == 'Git':
     st.markdown('<hr>', unsafe_allow_html=True)
@@ -204,7 +336,7 @@ elif topic == 'Git':
                 '<tbody><td>git log</td><td>View Information to previous commits.</td></tbody>'\
                 '<tbody><td>git checkout your_commit_id</td><td>Switch branches or restore working tree files</td></tbody>'\
                 '</table>', unsafe_allow_html=True)
-elif topic == 'KMeans':
+elif topic == 'Unsupervised Machine Learning':
     st.markdown('<hr>', unsafe_allow_html=True)
     
 elif topic == 'Heroku Commands':
