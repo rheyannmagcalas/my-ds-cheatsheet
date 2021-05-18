@@ -1,3 +1,5 @@
+folium==0.11.0
+streamlit-folium==0.1.0
 MarkupSafe==1.1.1
 matplotlib==3.2.2
 notebook==6.2.0
@@ -20,8 +22,6 @@ python-dateutil==2.8.1
 pytz==2020.5
 pyzmq==21.0.1
 requests==2.25.1
-seaborn==0.10.1
+seaborn==0.11.1
 streamlit==0.74.1
 gapminder==0.1
-folium==0.11.0
-streamlit-folium==0.1.0
