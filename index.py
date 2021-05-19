@@ -5,6 +5,7 @@ import pandas as pd
 import seaborn as sns
 import streamlit as st
 from streamlit_folium import folium_static
+from streamlit_embedcode import github_gist
 
 
 st.set_page_config(
@@ -14,7 +15,7 @@ st.set_page_config(
 )
 
 
-topic = st.sidebar.radio("Topics", ('Data Wrangling', 'Data Visualization', 'Feature Engineering', 'Git', 'Unsupervised Learning', 'Heroku Commands'))
+topic = st.sidebar.radio("Topics", ('Data Wrangling', 'Data Visualization', 'Feature Engineering', 'Git', 'Unsupervised Machine Learning', 'Heroku Commands'))
 
 if topic == 'Data Wrangling':
     st.markdown('<hr>', unsafe_allow_html=True)
@@ -395,6 +396,14 @@ elif topic == 'Git':
                 '</table>', unsafe_allow_html=True)
 elif topic == 'Unsupervised Machine Learning':
     st.markdown('<hr>', unsafe_allow_html=True)
+    st.write('KMeans Clustering')
+    github_gist('https://gist.github.com/rheyannmagcalas/2ae6eb950ee9cbfd5839180970fd1429', height=500, width=1200)
+    
+    st.write('Hierarchical Clustering')
+    github_gist('https://gist.github.com/rheyannmagcalas/af79e408a687340c49db3d6dbbe73ad4', height=500, width=1200)
+    
+    
+
     
 elif topic == 'Heroku Commands':
     st.markdown('<hr>', unsafe_allow_html=True)
