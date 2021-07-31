@@ -1,12 +1,14 @@
+import altair as alt
 import folium
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import streamlit as st
+
 from streamlit_folium import folium_static
 from streamlit_embedcode import github_gist
-
+from vega_datasets import data
 
 st.set_page_config(
     page_title="My DS Cheatsheet",
@@ -15,7 +17,7 @@ st.set_page_config(
 )
 
 
-topic = st.sidebar.radio("Topics", ('Data Wrangling', 'Data Visualization', 'Feature Engineering', 'Git', 'Unsupervised Machine Learning', 'Heroku Commands'))
+topic = st.sidebar.radio("Topics", ('Data Visualization', 'Data Wrangling',  'Feature Engineering', 'Git', 'Unsupervised Machine Learning', 'Heroku Commands'))
 
 if topic == 'Data Wrangling':
     st.markdown('<hr>', unsafe_allow_html=True)
@@ -93,76 +95,81 @@ elif topic == 'Data Visualization':
     st.markdown('<hr>', unsafe_allow_html=True)
 
     data_visualization_option = st.selectbox(
-        'Chart',  ('Column', 'Bar', 'Line', 'Scatterplot', 'Bubble', 'Histogram', 'Boxplot', 'Map'))
+        'Chart',  ('Column', 'Horizontal Bar', 'Stacked Bar', 'Line', 'Scatterplot', 'Bubble', 'Histogram', 'Boxplot', 'Map'))
 
     if data_visualization_option == 'Column':
-        st.markdown('A column chart is used to show a <b>COMPARISON</b> among different items, or it can show a comparison \
-        of items over time.', unsafe_allow_html=True)
+        st.markdown('A column chart is used to show a <b>COMPARISON</b> among different items, or it can show a comparison of items over time.', 
+        unsafe_allow_html=True)
         st.markdown('<b>Design Best Practices:</b>', unsafe_allow_html=True)
         st.markdown('<ul>\
             <li>Use consistent colors throughout the chart, selecting accent colors to highlight meaningful data points or changes over time.</li>\
             <li>Use horizontal labels to improve readability.</li>\
             <li>Start the y-axis at 0 to appropriately reflect the values in your graph.</li></ul>', unsafe_allow_html=True)
-        
-        st.markdown('<b>Example:</b>', unsafe_allow_html=True)
+
         sns.set(style="whitegrid")
         tips = sns.load_dataset("tips")
-
-        col1, col2 = st.beta_columns(2)
-
-        fig_1 = plt.figure(figsize=(5,3.75))
-        ax1 = sns.barplot(x="day", y="total_bill", data=tips, ci = None, color='#5499c7')
-        ax1.set_title('Total Bills per Day')
-        ax1.set(xlabel='Day', ylabel='Total Bills')        
-        col1.pyplot(fig_1)
         
-        st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
+        st.markdown('<b>Example 1 Code:</b>', unsafe_allow_html=True)
         with st.echo():
-            import matplotlib.pyplot as plt
-            import seaborn as sns
             sns.set(style="whitegrid")
             tips = sns.load_dataset("tips")
 
-            fig = plt.figure(figsize=(5,3.75))
+            fig_1 = plt.figure(figsize=(20, 6))
             ax1 = sns.barplot(x="day", y="total_bill", data=tips, ci = None, color='#5499c7')
             ax1.set_title('Total Bills per Day')
             ax1.set(xlabel='Day', ylabel='Total Bills')        
-            plt.show()
-        
-        
-        df = pd.DataFrame({'names': ['Mon', 'Tue', 'Wed', 'Thurs'], 
-                           'h2': [100, 90, 80, 70]})
-        
-        colors = df['names'].apply(lambda x: 'red' if x =='Mon' else '#bfc9ca')
-        
-        fig_2 = plt.figure(figsize=(5,3.75))
-        ax2 = sns.barplot(x='names', y='h2', palette=colors,  dodge=False, data=df)
-        ax2.set_xticklabels(labels=df['names'], rotation=90, fontsize=15)
-        ax2.set_title('Total Bills per Day')
-        ax2.set(xlabel='Day', ylabel='Total Bills')   
-        
-        col2.pyplot(fig_2)
-        
-        
+            st.pyplot(fig_1)
+
+        st.markdown('<b>Example 2 Code Using Seaborn:</b>', unsafe_allow_html=True)
         with st.echo():
-            import matplotlib.pyplot as plt
-            import seaborn as sns
-            sns.set(style="whitegrid")            
-            df = pd.DataFrame({'names': ['Mon', 'Tue', 'Wed', 'Thurs'], 
-                           'h2': [100, 90, 80, 70]})
+            df = pd.DataFrame({'names': ['Mon', 'Tue', 'Wed', 'Thurs'],  'h2': [100, 90, 80, 70]})
             
             colors = df['names'].apply(lambda x: 'red' if x =='Mon' else 'gray')
 
-            fig_2 = plt.figure(figsize=(5,3.75))
+            fig_2 = plt.figure(figsize=(20, 6))
             ax2 = sns.barplot(x='names', y='h2', palette=colors,  dodge=False, data=df)
             ax2.set_xticklabels(labels=df['names'], rotation=90, fontsize=15)
             ax2.set_title('Total Bills per Day')
             ax2.set(xlabel='Day', ylabel='Total Bills') 
-            plt.show()
+            st.pyplot(fig_2)
+
+        st.markdown('<b>Example 3 Code using Altair:</b>', unsafe_allow_html=True)
+        with st.echo():
+            source = pd.DataFrame({
+                'SampleX': ['Sample 1', 'Sample 2', 'Sample 3', 'Sample 4', 'Sample 5', 'Sample 6', 'Sample 7', 'Sample 8', 'Sample 9'],
+                'SampleY': [28, 55, 43, 91, 81, 53, 19, 87, 52]
+            })
+
+            altair_chart = alt.Chart(source, title="Example Chart Using Altair").mark_bar().encode(
+                x='SampleX',
+                y='SampleY',
+            ).properties(
+                width=800,
+                height=300
+            )
+
+            st.write(altair_chart)
         
+        st.markdown('<b>Example 4 using Altair:</b>', unsafe_allow_html=True)
+        with st.echo():
+            altair_chart_2 = alt.Chart(source, title="Example Chart Using Altair").mark_bar().encode(
+                x='SampleX',
+                y='SampleY',
+                # The highlight will be set on the result of a conditional statement
+                color=alt.condition(
+                    alt.datum.SampleX == 'Sample 2', 
+                    alt.value('orange'),  
+                    alt.value('steelblue')   # And if it's not true it sets the bar steelblue.
+                )
+            ).properties(
+                width=800,
+                height=300
+            )
+
+            st.write(altair_chart_2)
   
 
-    elif data_visualization_option == 'Bar':
+    elif data_visualization_option == 'Horizontal Bar':
         st.markdown('A bar graph, basically a horizontal column chart, should be used to avoid clutter when one data label is long or if you have \
             <b>more than 10 items to compare</b>. This type of visualization can also be used to <b>display negative numbers.</b>', unsafe_allow_html=True)
         st.markdown('<b>Design Best Practices:</b>', unsafe_allow_html=True)
@@ -171,29 +178,78 @@ elif topic == 'Data Visualization':
             <li>Use horizontal labels to improve readability.</li>\
             <li>Start the y-axis at 0 to appropriately reflect the values in your graph.</li></ul>', unsafe_allow_html=True)
         
-        st.markdown('<b>Example:</b>', unsafe_allow_html=True)
-        col1, col2 = st.beta_columns(2)
 
-        df = pd.DataFrame(np.random.randint(0,10,size=(10, 4)), columns=list('ABCD'))
-        fig = plt.figure(figsize=(5,3.75))
-        ax = sns.barplot(data=df, orient = 'h', ci = None, color='#5499c7')
-        ax.set_title('Sample Bar Graph')
-        ax.set(xlabel='X-Axis', ylabel='Y-Axis')
-        col1.pyplot(fig)
+        st.markdown('<b>Example 1 Using Seaborn Code:</b>', unsafe_allow_html=True)
+        df = pd.DataFrame(np.random.randint(0,10,size=(10, 10)), columns=list('ABCDEFGHIJ'))
 
-        st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
-        with st.echo():
-            import matplotlib.pyplot as plt
-            import numpy as np
-            import pandas as pd
-            import seaborn as sns
-
-            df = pd.DataFrame(np.random.randint(0,10,size=(10, 4)), columns=list('ABCD'))
-            plt.figure(figsize=(15,8))
+        with st.echo():    
+            fig_1 = plt.figure(figsize=(15,8))
             ax = sns.barplot(data=df, orient = 'h', ci = None, color='#5499c7')
-            ax.set_title('Sample Bar Graph')
-            ax.set(xlabel='X-Axis', ylabel='Y-Axis')
-            plt.show()
+            ax.set_title('Sample Horizontal Bar Graph', fontsize=15)
+            ax.set_xlabel('X-Axis', fontsize=15)
+            ax.set_ylabel('Y-Axis', fontsize=15)
+
+            st.pyplot(fig_1)
+
+        st.markdown('<b>Example 2 Using Altair:</b>', unsafe_allow_html=True)
+        with st.echo():
+            source = pd.DataFrame({
+                'SampleX': ['Sample 1', 'Sample 2', 'Sample 3', 'Sample 4', 'Sample 5', 'Sample 6', 'Sample 7', 'Sample 8', 'Sample 9'],
+                'SampleY': [28, 55, 43, 91, 81, 53, 19, 87, 52]
+            })
+
+            altair_chart = alt.Chart(source, title='Sample Horizontal Bar Graph').mark_bar().encode(
+                x=alt.Y('SampleY:Q', title='X Values'),
+                y=alt.Y('SampleX', title='Values')
+            ).properties(
+                width=800,
+                height=500
+            )
+
+            st.write(altair_chart)
+
+    elif data_visualization_option == 'Stacked Bar':
+        st.markdown('<b>Stacked column charts </b> work well when the focus of the chart is to compare the totals and one part of the totals. It’s hard for readers to \
+            compare columns that don’t start at the same baseline. If the focus of your chart is to compare multiple parts across all your totals with each other,\
+                 consider split bars or small multiples instead.', unsafe_allow_html=True)
+        st.markdown('<b>Design Best Practices:</b>', unsafe_allow_html=True)
+        st.markdown('<ul>\
+            <li><b>Bring the most important value to the bottom of the chart and use color to make it stand out. </b> Your readers can compare values easier with each other \
+                if they have the same baseline.</li>\
+            <li><b>Consider stacking percentages </b> (so that every total will sum up to 100%). This can be useful if the relative size of your parts is more important than their absolute \
+                size, and if your totals are not of interest to the reader. You will gain a second baseline at the top of your chart where you can place the second most important category \
+                    in your data.</li> \
+            <li><b>Make sure that you include all parts of the total in your charts</b> – and only parts of the total. Don’t include the total in your chart.</li>\
+            <li><b>Consider grouping tiny parts together into one bigger part (e.g. “others”) </b> to clean up the overall look of the chart. You will lead your reader’s eye to the important parts \
+                of your chart. In addition, you will need fewer labels, which will help your readers to navigate themselves faster on the chart.</li>    \
+                </ul>'
+                , unsafe_allow_html=True)
+
+        st.markdown('<b>Example 1 Using Seaborn Code:</b>', unsafe_allow_html=True)
+        with st.echo():
+            tips = sns.load_dataset('tips')
+            agg_tips = tips.groupby(['day', 'sex'])['tip'].sum().unstack().fillna(0)
+
+            fig, ax = plt.subplots(figsize=(15,8))
+            ax.bar(agg_tips.index, agg_tips['Male'], label='Male')
+            ax.bar(agg_tips.index, agg_tips['Female'], bottom=agg_tips['Male'],
+                label='Female')
+            ax.set_title('Tips by Day and Gender', fontsize=15)
+            ax.set_xlabel('Days', fontsize=15)
+            ax.set_ylabel('Tips by Gender', fontsize=15)
+            ax.legend()
+            st.pyplot(fig)
+
+        st.markdown('<b>Example 2 Using Altair:</b>', unsafe_allow_html=True)
+        with st.echo():
+            cars = data.cars()
+            altair_chart = alt.Chart(cars).mark_bar().encode(
+                x='Cylinders',
+                y='count()',
+                color='Origin'
+            ).properties(height=500, width=800)
+
+            st.write(altair_chart)        
 
     elif data_visualization_option == 'Line':
         st.markdown('A line graph reveals <b>trends or progress over time</b> and can be used to show many different categories of data. \
@@ -206,15 +262,40 @@ elif topic == 'Data Visualization':
         
         st.markdown('<b>Example:</b>', unsafe_allow_html=True)
 
-        fig = plt.figure(figsize=(7,3.5))
-        data = sns.load_dataset("iris") 
-        
-        ax = sns.lineplot(x="sepal_length", y="sepal_width", data=data) 
-        ax.set_title('Sample Line Graph')
-        ax.set(xlabel='X-Axis', ylabel='Y-Axis')
-        st.pyplot(fig)
+        st.markdown('<b>Using Seaborn Code 1:</b>', unsafe_allow_html=True)
+        with st.echo():
+            fig = plt.figure(figsize=(15,8))
+            iris_data = sns.load_dataset("iris") 
+            
+            ax = sns.lineplot(x="sepal_length", y="sepal_width", data=iris_data, ci=None) 
+            ax.set_title('Sample Line Graph')
+            ax.set(xlabel='X-Axis', ylabel='Y-Axis')
+            st.pyplot(fig)
 
-        st.markdown('<b>Seaborn Code:</b>', unsafe_allow_html=True)
+        st.markdown('<b>Using Seaborn Code 2:</b>', unsafe_allow_html=True)
+        with st.echo():
+            df = pd.DataFrame(dict(time=pd.date_range("2000-1-1", periods=5000),
+                       value=np.random.randn(5000).cumsum()))
+
+            ax = sns.relplot(x="time", y="value", kind="line", data=df)
+            ax.fig.autofmt_xdate()
+            ax.fig.set_size_inches(15,8)
+            st.pyplot(ax)
+
+        st.markdown('<b>Using Altair Code:</b>', unsafe_allow_html=True)
+        with st.echo():
+            cars = data.cars()
+            altair_chart = alt.Chart(cars, title='Sample Line Chart').mark_line().encode(
+                x='Year',
+                y='mean(Miles_per_Gallon)',
+                color='Origin'
+            ).properties(height=500, width=800)
+
+            st.write(altair_chart) 
+
+
+
+        
         
     elif data_visualization_option == 'Scatterplot':
         st.markdown('A scatterplot is a type of data display that shows the relationship between two numerical variables', unsafe_allow_html=True)
